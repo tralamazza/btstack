@@ -96,15 +96,20 @@ void btstack_run_loop_base_add_timer(btstack_timer_source_t *ts){
     it->next = (btstack_linked_item_t *) ts;
 }
 
-void  btstack_run_loop_base_process_timers(uint32_t now){
+int32_t btstack_run_loop_base_process_timers(uint32_t now){
+    int32_t delta_to_next_timer = -1;
     // process timers, exit when timeout is in the future
     while (btstack_run_loop_base_timers) {
         btstack_timer_source_t * ts = (btstack_timer_source_t *) btstack_run_loop_base_timers;
         int32_t delta = btstack_time_delta(ts->timeout, now);
-        if (delta > 0) break;
+        if (delta > 0) {
+            delta_to_next_timer = delta;
+            break;
+        };
         btstack_run_loop_base_remove_timer(ts);
         ts->process(ts);
     }
+    return delta_to_next_timer;
 }
 
 /**

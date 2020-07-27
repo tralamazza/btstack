@@ -79,8 +79,9 @@ bool  btstack_run_loop_base_remove_timer(btstack_timer_source_t * timer);
 /**
  * @brief Process timers: remove expired timers from list and call their process function
  * @param now
+ * @returns time until the next timer fires or -1 if no timer is expected to fire
  */
-void  btstack_run_loop_base_process_timers(uint32_t now);
+int32_t btstack_run_loop_base_process_timers(uint32_t now);
 
 /**
  * @brief Get time until first timer fires
